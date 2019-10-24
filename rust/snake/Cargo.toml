@@ -1,0 +1,9 @@
+[package]
+name = "snake"
+version = "0.1.0"
+authors = ["Rodrigo Mendes <mendes.rodrigo@gmail.com>"]
+
+[dependencies]
+rand = "0.5.3"
+piston_window = "0.80.0"
+rustfmt = "0.10.0"
