@@ -1,31 +1,48 @@
 <?php
 
-$config = [
-    "database" => [
-        "hostname" => "127.0.0.1",
-        "name" => "todo_dev",
-        "port" => 3306,
-        "username" => "dev",
-        "password" => "d3v",
-        "options" => [
-            PDO::ATTR_EMULATE_PREPARES   => false, // turn off emulation mode for "real" prepared statements
-            PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION, //turn on errors in the form of exceptions
-            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC, //make the default fetch be an associative array
-        ]
-    ]
-];
+require_once('core/bootstrap.php');
 
-set_exception_handler(function ($e) {
-    error_log($e->getMessage());
-    exit('\nSomething weird happened'); //something a user can understand
-});
+use Core\Database\DBConnection;
+use Core\Database\QueryBuilder;
 
-$dsn = "mysql:host=" . $config['database']['hostname'] . ";dbname=" . $config['database']['name'];
-$username = $config['database']['username'];
-$password = $config['database']['password'];
-$options = $config['database']['options'];
+$connection = DBConnection::connect();
 
-$pdo = new PDO($dsn, $username, $password, $options);
+$builder = new QueryBuilder($connection);
+$builder->insert('tasks', ["title" => "Title " . time(), "description" => "Description of task " . time()]);
 
-$stmt = $pdo->prepare("INSERT INTO tasks(title) VALUES(?)");
-$stmt->execute(["Title 1"]);
+$tasks = $builder->fetchAll('tasks');
+foreach ($tasks as $task) {
+    echo "\n\n\tID:" . $task->id . "\n\tTITLE: " . $task->title;
+    $description = $task->description;
+    if ($description != null) {
+        echo "\n\tDESCRIPTION: " . $task->description;
+    }
+}
+
+// echo "\ntest 2";
+// $tasks = $builder->fetchAll('tasks', ['id, description'], ['id' => 6]);
+// foreach ($tasks as $task) {
+//     echo "\n\n\tID:" . $task->id . "\n\tTITLE: " . $task->title;
+//     $description = $task->description;
+//     if ($description != null) {
+//         echo "\n\tDESCRIPTION: " . $task->description;
+//     }
+// }
+
+// echo "\ntest 3";
+// $tasks = $builder->fetchAll('tasks', [], [], 2);
+// foreach ($tasks as $task) {
+//     echo "\n\n\tID:" . $task->id . "\n\tTITLE: " . $task->title;
+//     $description = $task->description;
+//     if ($description != null) {
+//         echo "\n\tDESCRIPTION: " . $task->description;
+//     }
+// }
+
+echo "\ntest 4";
+$task = $builder->fetchOne('tasks', [], ["id" => 5]);
+echo "\n\n\tID:" . $task->id . "\n\tTITLE: " . $task->title;
+$description = $task->description;
+if ($description != null) {
+    echo "\n\tDESCRIPTION: " . $task->description;
+}
