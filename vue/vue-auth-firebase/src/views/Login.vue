@@ -1,9 +1,9 @@
 <template>
   <main>
     <h1>Login</h1>
-    <input type="text" name="email" placeholder="E-mail" />
+    <input type="text" v-model="email" placeholder="E-mail" />
     <br />
-    <input type="password" name="password" placeholder="Password" />
+    <input type="password" v-model="password" placeholder="Password" />
     <br />
     <div class="btn-login">
       <button @click="login">Sign in</button>
@@ -15,13 +15,28 @@
   </main>
 </template>
 <script>
+import firebase from "firebase/app";
+import "firebase/auth";
+
 export default {
   data() {
-    return {};
+    return {
+      email: null,
+      password: null
+    };
   },
   methods: {
-    login: function() {
-      this.$router.replace("home");
+    login: async function() {
+      try {
+        const user = await firebase
+          .auth()
+          .signInWithEmailAndPassword(this.email, this.password);
+        this.$router.replace("home");
+        console.log("User logged in:", user);
+      } catch (ex) {
+        console.error("Fail on login. Error: ", ex);
+        alert(`Fail on login. Error:  ${ex}`);
+      }
     }
   }
 };

@@ -4,7 +4,8 @@ import Home from "@/views/Home.vue";
 import About from "@/views/About.vue";
 import Login from "@/views/Login.vue";
 import SignUp from "@/views/SignUp.vue";
-import firebase from "firebase";
+import firebase from "firebase/app";
+import "firebase/auth";
 
 Vue.use(VueRouter);
 
@@ -19,7 +20,6 @@ const routes = [
 	},
 	{
 		path: "/home",
-		name: "home",
 		component: Home,
 		meta: {
 			requiresAuth: true
@@ -27,17 +27,14 @@ const routes = [
 	},
 	{
 		path: "/about",
-		name: "about",
 		component: About
 	},
 	{
 		path: "/login",
-		name: "login",
 		component: Login
 	},
 	{
 		path: "/signup",
-		name: "signup",
 		component: SignUp
 	}
 ];

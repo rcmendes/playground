@@ -13,7 +13,8 @@
   </div>
 </template>
 <script>
-import firebase from "firebase";
+import firebase from "firebase/app";
+import "firebase/auth";
 
 export default {
   data: () => ({
@@ -30,7 +31,7 @@ export default {
         console.log("Created user:", user);
       } catch (ex) {
         console.error("Fail on create account. Error: ", ex);
-        alert("Fail on create account. Error: ", ex);
+        alert(`Fail on login. Error:  ${ex}`);
       }
     }
   }
