@@ -1,14 +1,18 @@
 <template>
   <main>
     <h1>Login</h1>
-    <input type="text" v-model="email" placeholder="E-mail" />
-    <br />
-    <input type="password" v-model="password" placeholder="Password" />
-    <br />
-    <div class="btn-login">
-      <button @click="loginWithEmailPassword">Sign in</button>
-      <button @click="loginWithGoogle">Google</button>
+
+    <div class="input-group mb-3">
+      <input type="text" class="form-control" v-model="email" placeholder="E-mail" />
+      <input type="password" class="form-control" v-model="password" placeholder="Password" />
+      <br />
+      <button class="btn btn-secondary" @click="loginWithEmailPassword">Sign in</button>
     </div>
+    <div>or</div>
+    <div>
+      <button class="btn btn-primary" @click="loginWithGoogle">Sign in with Google</button>
+    </div>
+    <br />
     <p>
       Don't have an account yet?
       <router-link to="/signup">Create an account</router-link>
@@ -41,9 +45,10 @@ export default {
     },
     loginWithGoogle: async function() {
       try {
-        const provider = firebase.auth.GoogleAuthProvider();
-        await firebase.auth().signInWithPopup(provider);
+        const provider = new firebase.auth.GoogleAuthProvider();
+        const user = await firebase.auth().signInWithPopup(provider);
         this.$router.replace("home");
+        console.log("User logged in:", user);
       } catch (ex) {
         console.error("Fail on login. Error: ", ex);
         alert(`Fail on login. Error:  ${ex}`);

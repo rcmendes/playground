@@ -1,8 +1,9 @@
 <template>
   <div class="home">
-    <h1>Vue Authentication with Firebase!!!</h1>
-    <h4>{{currentUser.email}}</h4>
-    <button @click="sair">Sair</button>
+    <h1>Hello !!!</h1>
+    <h3>{{currentUser.displayName}}</h3>
+    <h5>{{currentUser.email}}</h5>
+    <button class="btn btn-primary" @click="sair">Sair</button>
   </div>
 </template>
 
