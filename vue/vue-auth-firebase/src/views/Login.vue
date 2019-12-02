@@ -6,7 +6,8 @@
     <input type="password" v-model="password" placeholder="Password" />
     <br />
     <div class="btn-login">
-      <button @click="login">Sign in</button>
+      <button @click="loginWithEmailPassword">Sign in</button>
+      <button @click="loginWithGoogle">Google</button>
     </div>
     <p>
       Don't have an account yet?
@@ -26,13 +27,23 @@ export default {
     };
   },
   methods: {
-    login: async function() {
+    loginWithEmailPassword: async function() {
       try {
         const user = await firebase
           .auth()
           .signInWithEmailAndPassword(this.email, this.password);
         this.$router.replace("home");
         console.log("User logged in:", user);
+      } catch (ex) {
+        console.error("Fail on login. Error: ", ex);
+        alert(`Fail on login. Error:  ${ex}`);
+      }
+    },
+    loginWithGoogle: async function() {
+      try {
+        const provider = firebase.auth.GoogleAuthProvider();
+        await firebase.auth().signInWithPopup(provider);
+        this.$router.replace("home");
       } catch (ex) {
         console.error("Fail on login. Error: ", ex);
         alert(`Fail on login. Error:  ${ex}`);
