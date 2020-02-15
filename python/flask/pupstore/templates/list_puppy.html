@@ -1,0 +1,33 @@
+{% extends 'base_layout.html' %}
+
+{% block content %}
+<nav class="panel">
+  <p class="panel-heading">
+    List of puppies available for adoption:
+  </p>
+  <div class="panel-block">
+    <p class="control has-icons-left">
+      <input class="input" type="text" placeholder="Search">
+      <span class="icon is-left">
+        <i class="fas fa-search" aria-hidden="true"></i>
+      </span>
+    </p>
+  </div>
+  <p class="panel-tabs">
+    <a class="is-active">All</a>
+    <a>Dogs</a>
+    <a>Cats</a>
+    <a>Others</a>
+  </p>
+ 
+    {% for pup in puppies %}
+    <a class="panel-block">
+    <span class="panel-icon">
+      <i class='fas fa-dog' aria-hidden="true"></i>
+    </span>
+    {{pup.name}}
+  </a>
+    {% endfor %}
+</nav>
+
+{% endblock content %}
