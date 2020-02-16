@@ -24,3 +24,5 @@ hs_err_pid*
 
 ENV
 .vscode
+__pycache__
+data.db
