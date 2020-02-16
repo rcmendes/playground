@@ -1,3 +1,4 @@
+import os
 from flask import Flask
 from flask_restful import Api
 from resources.ping import Ping
@@ -6,7 +7,9 @@ from db import db
 
 app = Flask(__name__)
 
-app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///data.db"
+basedir = os.path.abspath(os.path.dirname(__file__))
+
+app.config["SQLALCHEMY_DATABASE_URI"] = f"sqlite:///{basedir}/data.db"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 api = Api(app)
