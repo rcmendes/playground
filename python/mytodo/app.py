@@ -7,7 +7,7 @@ from ma import ma
 from resources.user import User
 from resources.login import Login
 from flask_jwt_extended import JWTManager
-
+from marshmallow import ValidationError
 
 app = Flask(__name__)
 
@@ -25,6 +25,11 @@ app.config['JWT_SECRET_KEY'] = 'super-secret'  # Change this!
 @app.before_first_request
 def create_database():
     db.create_all()
+
+
+@app.errorhandler(ValidationError)
+def handle_schema_errors(err):
+    return err.messages, 400
 
 
 api = Api(app)

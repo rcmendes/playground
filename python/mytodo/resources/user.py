@@ -24,16 +24,16 @@ class User(Resource):
         reqDTO = RegisterUserDTORequest()
 
         user_json = request.get_json()
-        try:
-            userSchema = reqDTO.load(user_json)
+        # try:
+        userSchema = reqDTO.load(user_json)
 
-            if UserModel.find_by_username(userSchema["username"]):
-                return {"message": "Username already exists"}, 400
-            user = UserModel(**userSchema)
+        if UserModel.find_by_username(userSchema["username"]):
+            return {"message": "Username already exists"}, 400
+        user = UserModel(**userSchema)
 
-            user.save()
-            return RegisterUserDTOResponse().dump(user), 201
-        except ValidationError as err:
-            return err.messages, 400
+        user.save()
+        return RegisterUserDTOResponse().dump(user), 201
+        # except ValidationError as err:
+        # return err.messages, 400
 
         return reqDTO.dump(user), 201
