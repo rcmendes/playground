@@ -33,7 +33,3 @@ class User(Resource):
 
         user.save()
         return RegisterUserDTOResponse().dump(user), 201
-        # except ValidationError as err:
-        # return err.messages, 400
-
-        return reqDTO.dump(user), 201
