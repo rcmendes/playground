@@ -1,3 +1,4 @@
+from uuid import uuid4
 from db import db
 
 
@@ -8,9 +9,14 @@ class Agenda(db.Model):
     title = db.Column(db.String(100), nullable=False, unique=True)
     description = db.Column(db.String(2048), nullable=False)
 
-    user_id = db.
+    user_id = db.Column(db.String(36), db.ForeignKey(
+        "users.id"), nullable=False)
+    user = db.relationship("UserModel")
+    tasks = db.relationship("TaskModel", lazy="dinamic")
 
-    # Create relationship with tasks and user
-    # Create relationship between task and agenda
-    # Replace all ID Integer by ID UUID
+    def __init__(self, user_id: str, **kwargs):
+        super().__init__(**kwargs)
+        self.user_id = user_id
+        self.id = uuid4()
+
     # Create Agenda Schema from Marshmallow-SQLAlchemy

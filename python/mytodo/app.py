@@ -1,9 +1,10 @@
 import os
+from datetime import datetime
 
 from flask import Flask
 from flask_restful import Api, Resource
-from datetime import datetime
 from flask_jwt_extended import JWTManager
+from flask_migrate import Migrate
 from marshmallow import ValidationError
 
 from db import db
@@ -17,6 +18,7 @@ app = Flask(__name__)
 # Setup database
 app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("SQLALCHEMY_DATABASE_URI")
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+migrate = Migrate(app, db)
 
 # Setup the Flask-JWT-Extended extension
 jwt = JWTManager(app)
