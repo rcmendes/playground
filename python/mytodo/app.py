@@ -1,4 +1,5 @@
 import os
+
 from datetime import datetime
 
 from flask import Flask
@@ -16,13 +17,19 @@ from resources.task import Task
 app = Flask(__name__)
 
 # Setup database
-app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("SQLALCHEMY_DATABASE_URI")
+app.config["DEBUG"] = True
+# os.getenv("DATABASE_URI")
+app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///data.db"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
-migrate = Migrate(app, db)
+app.config["PROPAGATE_EXCEPTIONS"] = True
 
 # Setup the Flask-JWT-Extended extension
-jwt = JWTManager(app)
 app.config['JWT_SECRET_KEY'] = os.getenv("JWT_SECRET_KEY")
+jwt = JWTManager(app)
+
+api = Api(app)
+
+migrate = Migrate(app, db)
 
 
 @app.before_first_request
@@ -35,8 +42,6 @@ def handle_schema_errors(err):
     return err.messages, 400
 
 
-api = Api(app)
-
 api.add_resource(User, "/users", "/users/<int:user_id>")
 api.add_resource(Login, "/login")
 api.add_resource(Task, "/tasks", "/tasks/<int:task_id>")
@@ -44,4 +49,5 @@ api.add_resource(Task, "/tasks", "/tasks/<int:task_id>")
 if "__main__" == __name__:
     db.init_app(app)
     ma.init_app(app)
+
     app.run(port=5000, debug=True)

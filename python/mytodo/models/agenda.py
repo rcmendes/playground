@@ -1,8 +1,11 @@
 from uuid import uuid4
 from db import db
 
+from models.task import TaskModel
+from models.user import UserModel
 
-class Agenda(db.Model):
+
+class AgendaModel(db.Model):
     __tablename__ = "agendas"
 
     id = db.Column(db.String(36), primary_key=True)

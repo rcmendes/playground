@@ -1,6 +1,8 @@
 from uuid import uuid4
 from db import db
 
+from models.agenda import AgendaModel
+
 
 class TaskModel(db.Model):
     __tablename__ = "tasks"
