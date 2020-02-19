@@ -15,9 +15,9 @@ class TaskModel(db.Model):
 
     def __init__(self, title: str, agenda_id: str, **kwargs):
         super().__init__(**kwargs)
+        self.id = uuid4().hex
         self.title = title
         self.agenda_id = agenda_id
-        self.id = uuid4()
 
     @classmethod
     def fetch_all(cls):

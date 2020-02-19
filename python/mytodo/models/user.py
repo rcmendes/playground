@@ -12,7 +12,7 @@ class UserModel(db.Model):
 
     def __init__(self, username: str, password: str, **kwargs):
         super().__init__(**kwargs)
-        self.id = uuid4()
+        self.id = uuid4().hex
         self.username = username
         self.password = password
 

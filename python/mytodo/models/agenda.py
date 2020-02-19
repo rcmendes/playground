@@ -16,7 +16,7 @@ class Agenda(db.Model):
 
     def __init__(self, user_id: str, **kwargs):
         super().__init__(**kwargs)
+        self.id = uuid4().hex
         self.user_id = user_id
-        self.id = uuid4()
 
     # Create Agenda Schema from Marshmallow-SQLAlchemy
