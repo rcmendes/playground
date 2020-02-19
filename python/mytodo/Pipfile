@@ -14,6 +14,8 @@ flask-marshmallow = "*"
 flask-jwt-extended = "*"
 marshmallow = "*"
 marshmallow-sqlalchemy = "*"
+python-dotenv = "*"
+flask-migrate = "*"
 
 [requires]
 python_version = "3.8"
