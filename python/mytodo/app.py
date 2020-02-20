@@ -15,17 +15,11 @@ from resources.login import Login
 from resources.task import Task
 from resources.agenda import Agenda
 
+
 app = Flask(__name__)
 
-# Setup database
-app.config["DEBUG"] = True
-app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv(
-    "DATABASE_URI", "sqlite:///data.db")
-app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
-app.config["PROPAGATE_EXCEPTIONS"] = True
+app.config.from_object("config")
 
-# Setup the Flask-JWT-Extended extension
-app.config['JWT_SECRET_KEY'] = os.getenv("JWT_SECRET_KEY")
 jwt = JWTManager(app)
 
 api = Api(app)

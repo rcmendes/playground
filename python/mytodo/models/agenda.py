@@ -19,6 +19,9 @@ class AgendaModel(db.Model):
         self.id = uuid4().hex
         self.user_id = user_id
 
+    def __repr__(self):
+        return f"id: {self.id}, title: {self.title}, user_id: {self.user_id}"
+
     @classmethod
     def fetch_all(cls) -> ["AgendaModel"]:
         return cls.query.all()

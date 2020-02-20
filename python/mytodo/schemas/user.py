@@ -3,18 +3,18 @@ from marshmallow.validate import Length
 
 
 class RegisterUserRequest(Schema):
-    username = fields.Str(required=True, validate=Length(min=4, max=80))
-    password = fields.Str(required=True, validate=Length(max=255))
+    username = fields.String(required=True, validate=Length(min=4, max=80))
+    password = fields.String(required=True, validate=Length(max=255))
 
 
 class RegisterUserResponse(Schema):
-    id = fields.Str(required=True)
-    username = fields.Str(required=True)
+    id = fields.String(required=True)
+    username = fields.String(required=True)
 
 
 class UserResponse(Schema):
-    id = fields.Str(required=True)
-    username = fields.Str(required=True)
+    id = fields.String(required=True)
+    username = fields.String(required=True)
 
 
 register_user_request = RegisterUserRequest()
