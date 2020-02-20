@@ -30,6 +30,6 @@ class Agenda(Resource):
         if AgendaModel.find_by_title(agenda["title"]):
             return {"message": "This title is already been used."}, 400
 
-        agenda = AgendaModel(**agenda)
+        # agenda = AgendaModel(**agenda)
         agenda.save()
         return agendaSchema.dump(agenda), 201

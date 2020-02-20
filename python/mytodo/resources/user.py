@@ -1,8 +1,14 @@
+import os
+
 from flask_restful import Resource, request
-from schemas.user import register_user_request, register_user_response, user_response, users_response
-from marshmallow import ValidationError
-from models.user import UserModel
 from flask_jwt_extended import jwt_required
+from marshmallow import ValidationError
+import bcrypt
+
+from schemas.user import register_user_request, register_user_response, user_response, users_response
+from models.user import UserModel
+
+salt = os.getenv("USER_PASSWORD_SALT")
 
 
 class User(Resource):
@@ -25,7 +31,9 @@ class User(Resource):
 
         if UserModel.find_by_username(userSchema["username"]):
             return {"message": "Username already exists"}, 400
+
         user = UserModel(**userSchema)
+        user.password = bcrypt.hashpw(user.password, salt)
 
         user.save()
 
