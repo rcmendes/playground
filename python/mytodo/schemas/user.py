@@ -8,12 +8,12 @@ class RegisterUserRequest(Schema):
 
 
 class RegisterUserResponse(Schema):
-    id = fields.Int(required=True)
+    id = fields.Str(required=True)
     username = fields.Str(required=True)
 
 
 class UserResponse(Schema):
-    id = fields.Int(required=True)
+    id = fields.Str(required=True)
     username = fields.Str(required=True)
 
 

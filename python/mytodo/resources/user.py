@@ -7,7 +7,7 @@ from flask_jwt_extended import jwt_required
 
 class User(Resource):
     @classmethod
-    def get(cls, user_id: int = None):
+    def get(cls, user_id: str = None):
         if not user_id:
             return users_response.dump(UserModel.fetch_all()), 200
 

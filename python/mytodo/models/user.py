@@ -17,21 +17,21 @@ class UserModel(db.Model):
         self.password = password
 
     @classmethod
-    def find_by_username(cls, username: str):
+    def fetch_all(cls) -> ["UserModel"]:
+        return cls.query.all()
+
+    @classmethod
+    def find_by_username(cls, username: str) -> "UserModel":
         return cls.query.filter_by(username=username).first()
 
     @classmethod
-    def find_by_id(cls, id: int):
+    def find_by_id(cls, id: str) -> "UserModel":
         return cls.query.filter_by(id=id).first()
 
-    @classmethod
-    def fetch_all(cls):
-        return cls.query.all()
-
-    def delete(self):
+    def delete(self) -> None:
         db.session.delete(self)
         db.session.commit()
 
-    def save(self):
+    def save(self) -> None:
         db.session.add(self)
         db.session.commit()

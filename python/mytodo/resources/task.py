@@ -9,7 +9,7 @@ from schemas.task import task_insert_request, task_insert_response, task_respons
 class Task(Resource):
     @classmethod
     @jwt_required
-    def get(cls, task_id: int = None):
+    def get(cls, task_id: str = None):
         if task_id:
             task = TaskModel.find_by_id(task_id)
             if not task:
@@ -33,7 +33,7 @@ class Task(Resource):
 
     @classmethod
     @jwt_required
-    def put(cls, task_id: int):
+    def put(cls, task_id: str):
         task_json = request.get_json()
         taskSchema = task_insert_request.load(task_json)
         task = TaskModel.find_by_id(taskSchema["id"])

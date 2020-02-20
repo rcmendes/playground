@@ -8,13 +8,13 @@ class TaskInsertRequest(Schema):
 
 
 class TaskInsertResponse(Schema):
-    id = fields.Integer(required=True)
+    id = fields.String(required=True)
     title = fields.String(required=True)
     # description = fields.String(required=False)
 
 
 class TaskResponse(Schema):
-    id = fields.Integer(required=True)
+    id = fields.String(required=True)
     title = fields.String(required=True)
     # description = fields.String(required=False)
 

@@ -1,8 +1,6 @@
 from uuid import uuid4
 from db import db
 
-from models.agenda import AgendaModel
-
 
 class TaskModel(db.Model):
     __tablename__ = "tasks"
@@ -22,17 +20,17 @@ class TaskModel(db.Model):
         self.agenda_id = agenda_id
 
     @classmethod
-    def fetch_all(cls):
+    def fetch_all(cls) -> ["TaskModel"]:
         return cls.query.all()
 
     @classmethod
-    def find_by_id(cls, task_id: int):
+    def find_by_id(cls, task_id: str) -> "TaskModel":
         return cls.query.filter_by(id=task_id).first()
 
-    def save(self):
+    def save(self) -> None:
         db.session.add(self)
         db.session.commit()
 
-    def delete(self):
+    def delete(self) -> None:
         db.session.delete(self)
         db.session.commit()
