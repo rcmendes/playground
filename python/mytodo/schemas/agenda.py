@@ -3,13 +3,12 @@ from ma import ma
 from models.agenda import AgendaModel
 
 
-class AgendaSchema(ma.SQLAlchemyAutoSchema):
+class AgendaSchema(ma.ModelSchema):
     class Meta:
         model = AgendaModel
-        load_only = ("tasks", "description")
-        dump_only = ("id")
+        load_only = ("tasks", "description", "user",)
+        dump_only = ("id",)
         include_fk = True
-        load_instance = True
 
 
 agendaSchema = AgendaSchema()

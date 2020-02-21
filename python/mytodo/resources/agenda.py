@@ -3,7 +3,7 @@ from flask_restful import Resource
 from flask_jwt_extended import jwt_required
 
 from models.agenda import AgendaModel
-from schemas.agenda import agendaSchema, agendaListSchema, AgendaSchema
+from schemas.agenda import agendaSchema, agendaListSchema
 
 
 class Agenda(Resource):
@@ -23,12 +23,11 @@ class Agenda(Resource):
     @jwt_required
     def post(cls):
         agenda_json = request.get_json()
-        schema = AgendaSchema()
-        agenda = schema.load(agenda_json)
+        agenda = agendaSchema.load(agenda_json)
 
-        if AgendaModel.find_by_title(agenda["title"]):
+        if AgendaModel.find_by_title(agenda.title):
             return {"message": "This title is already been used."}, 400
 
-        # agenda = AgendaModel(**agenda)
         agenda.save()
+
         return agendaSchema.dump(agenda), 201
