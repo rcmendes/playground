@@ -8,8 +8,6 @@ import bcrypt
 from schemas.user import register_user_request, register_user_response, user_response, users_response
 from models.user import UserModel
 
-salt = os.getenv("USER_PASSWORD_SALT").encode()
-
 
 class User(Resource):
     @classmethod
@@ -33,13 +31,9 @@ class User(Resource):
             return {"message": "Username already exists"}, 400
 
         user = UserModel(**userSchema)
-        hash = bcrypt.hashpw(user.password.encode('utf8'), salt)
-        print(hash)
-        return {}, 200
-        user.password = bcrypt.hashpw(
-            user.password.encode('utf8'), bcrypt.gensalt(10))
+        hash = bcrypt.hashpw(user.password.encode('utf8'), bcrypt.gensalt(10))
+        user.password = hash
 
-        return user, 200
         user.save()
 
         return register_user_response.dump(user), 201

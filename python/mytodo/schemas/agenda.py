@@ -7,8 +7,9 @@ class AgendaSchema(ma.SQLAlchemyAutoSchema):
     class Meta:
         model = AgendaModel
         load_only = ("tasks", "description")
-        dump_only = ("id",)
+        dump_only = ("id")
         include_fk = True
+        load_instance = True
 
 
 agendaSchema = AgendaSchema()

@@ -25,7 +25,6 @@ class Agenda(Resource):
         agenda_json = request.get_json()
         schema = AgendaSchema()
         agenda = schema.load(agenda_json)
-        # return agenda_json, 200
 
         if AgendaModel.find_by_title(agenda["title"]):
             return {"message": "This title is already been used."}, 400
