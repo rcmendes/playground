@@ -14,6 +14,7 @@ from resources.user import User
 from resources.login import Login
 from resources.task import Task
 from resources.agenda import Agenda
+from resources.task import Task
 
 
 app = Flask(__name__)
@@ -37,10 +38,11 @@ def handle_schema_errors(err):
     return err.messages, 400
 
 
-api.add_resource(User, "/users", "/users/<int:user_id>")
+api.add_resource(User, "/users", "/users/<string:user_id>")
 api.add_resource(Login, "/login")
-api.add_resource(Task, "/tasks", "/tasks/<int:task_id>")
-api.add_resource(Agenda, "/agendas", "/agendas/<int:agenda_id>")
+api.add_resource(Task, "/tasks", "/tasks/<string:task_id>")
+api.add_resource(Agenda, "/agendas", "/agendas/<string:agenda_id>")
+# api.add_resource(Task, "/tasks", "/tasks/<str:task_id")
 
 if "__main__" == __name__:
     db.init_app(app)

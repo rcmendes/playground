@@ -1,8 +1,11 @@
 from uuid import uuid4
 from db import db
 
+from models.base import BaseModel
+from models.agenda import AgendaModel
 
-class TaskModel(db.Model):
+
+class TaskModel(BaseModel):
     __tablename__ = "tasks"
 
     id = db.Column(db.String(36), primary_key=True)
@@ -26,11 +29,3 @@ class TaskModel(db.Model):
     @classmethod
     def find_by_id(cls, task_id: str) -> "TaskModel":
         return cls.query.filter_by(id=task_id).first()
-
-    def save(self) -> None:
-        db.session.add(self)
-        db.session.commit()
-
-    def delete(self) -> None:
-        db.session.delete(self)
-        db.session.commit()

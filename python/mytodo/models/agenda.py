@@ -1,8 +1,10 @@
 from uuid import uuid4
 from db import db
 
+from models.base import BaseModel
 
-class AgendaModel(db.Model):
+
+class AgendaModel(BaseModel):
     __tablename__ = "agendas"
 
     id = db.Column(db.String(36), primary_key=True)
@@ -33,11 +35,3 @@ class AgendaModel(db.Model):
     @classmethod
     def find_by_id(cls, id: str) -> "AgendaModel":
         return cls.query.filter_by(id=id).first()
-
-    def save(self) -> None:
-        db.session.add(self)
-        db.session.commit()
-
-    def delete(self) -> None:
-        db.session.delete(self)
-        db.session.commit()

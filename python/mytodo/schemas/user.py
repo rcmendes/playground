@@ -1,12 +1,17 @@
+from marshmallow import fields
+from marshmallow.validate import Email
+
+from schemas.base import BaseSchema
 from models.user import UserModel
-from ma import ma
 
 
-class UserSchema(ma.ModelSchema):
+class UserSchema(BaseSchema):
+    # class Meta:
     class Meta:
         model = UserModel
-        dump_only = ("id",)
         load_only = ("password",)
+
+    email = fields.String(validate=Email())
 
 
 user_schema = UserSchema()

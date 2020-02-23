@@ -1,19 +1,20 @@
 from uuid import uuid4
+
 from db import db
+from models.base import BaseModel
 
 
-class UserModel(db.Model):
+class UserModel(BaseModel):
     __tablename__ = "users"
 
-    id = db.Column(db.String(36), primary_key=True)
-    username = db.Column(db.String(80), nullable=False,
-                         unique=True, index=True)
+    email = db.Column(db.String(100), nullable=False,
+                      unique=True, index=True)
     password = db.Column(db.String(255), nullable=False)
 
-    def __init__(self, username: str, password: str, **kwargs):
+    def __init__(self, email: str, password: str, **kwargs):
         super().__init__(**kwargs)
         self.id = uuid4().hex
-        self.username = username
+        self.email = email
         self.password = password
 
     @classmethod
@@ -21,17 +22,9 @@ class UserModel(db.Model):
         return cls.query.all()
 
     @classmethod
-    def find_by_username(cls, username: str) -> "UserModel":
-        return cls.query.filter_by(username=username).first()
+    def find_by_email(cls, email: str) -> "UserModel":
+        return cls.query.filter_by(email=email).first()
 
     @classmethod
     def find_by_id(cls, id: str) -> "UserModel":
         return cls.query.filter_by(id=id).first()
-
-    def delete(self) -> None:
-        db.session.delete(self)
-        db.session.commit()
-
-    def save(self) -> None:
-        db.session.add(self)
-        db.session.commit()

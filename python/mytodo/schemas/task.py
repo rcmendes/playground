@@ -1,28 +1,14 @@
-from marshmallow import Schema, fields
-from marshmallow.validate import Length
-
-from ma import ma
+from schemas.base import BaseSchema
+from models.task import TaskModel
 
 
-class TaskInsertRequest(Schema):
-    title = fields.String(required=True, validate=Length(min=1, max=100))
-    # description = fields.String(required=False, validate=Length(max=1024))
-
-
-class TaskInsertResponse(Schema):
-    id = fields.String(required=True)
-    title = fields.String(required=True)
-    # description = fields.String(required=False)
-
-
-class TaskResponse(ma.ModelSchema):
+class TaskSchema(BaseSchema):
     class Meta:
+        model = TaskModel
         include_fk = True
+        dump_only = ("id", "agenda", )
         load_only = ("agenda",)
-        dump_only = ("id", "agenda",)
 
 
-task_insert_request = TaskInsertRequest()
-task_insert_response = TaskInsertResponse()
-task_response = TaskResponse()
-tasks_response = TaskResponse(many=True)
+task_schema = TaskSchema()
+task_list_schema = TaskSchema(many=True)
