@@ -3,6 +3,7 @@ from flask_restful import Resource
 from flask_jwt_extended import jwt_required
 
 from models.agenda import AgendaModel
+from models.user import UserModel
 from schemas.agenda import agendaSchema, agendaListSchema
 
 
@@ -24,6 +25,9 @@ class Agenda(Resource):
     def post(cls):
         agenda_json = request.get_json()
         agenda = agendaSchema.load(agenda_json)
+
+        if not UserModel.find_by_id(agenda.user_id):
+            return {"message": "The specified user <id={agenda.user_id}> was not found."}, 400
 
         if AgendaModel.find_by_title(agenda.title):
             return {"message": "This title is already been used."}, 400

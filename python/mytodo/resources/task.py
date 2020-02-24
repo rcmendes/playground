@@ -3,6 +3,7 @@ from flask_restful import Resource
 from flask_jwt_extended import jwt_required
 
 from models.task import TaskModel
+from models.agenda import AgendaModel
 from schemas.task import task_schema, task_list_schema
 
 
@@ -26,6 +27,9 @@ class Task(Resource):
         task_json = request.get_json()
 
         task = task_schema.load(task_json)
+
+        if not AgendaModel.find_by_id(task.agenda_id):
+            return {"message": "The specified agenda <id={task.agenda_id}}> was not found."}, 400
 
         task.save()
 

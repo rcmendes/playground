@@ -36,7 +36,7 @@ class User(Resource):
         return user_schema.dump(user), 201
 
     @classmethod
-    def put(cls, user_id: str):
+    def patch(cls, user_id: str):
         user_json = request.get_json()
         user_data = user_schema.load(user_json)
 
@@ -57,3 +57,24 @@ class User(Resource):
         user.save()
 
         return user_schema.dump(user), 204
+
+    @classmethod
+    def put(cls, user_id: str):
+        user_json = request.get_json()
+        updated_user = user_schema.load(user_json)
+
+        old_user = UserModel.find_by_id(user_id)
+        if not old_user:
+            return {"message": f"User <id={user_id} not found."}, 404
+
+        if updated_user.email != old_user.email and UserModel.find_by_email(updated_user.email):
+            return {"message": "E-mail already exists"}, 400
+
+        hash = bcrypt.hashpw(updated_user.password.encode(
+            'utf8'), bcrypt.gensalt(10))
+        updated_user.password = hash
+
+        updated_user.id = user_id
+        updated_user.save()
+
+        return user_schema.dump(updated_user), 200
