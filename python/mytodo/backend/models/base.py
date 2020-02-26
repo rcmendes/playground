@@ -41,5 +41,5 @@ class BaseModel(db.Model):
         db.session.commit()
 
     @property
-    def query(self):
-        return self.__class__.query.filter_by(archived_at != None)
+    def archived(self):
+        return self.archived_at is not None

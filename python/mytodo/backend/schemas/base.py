@@ -9,6 +9,7 @@ class BaseSchema(ma.ModelSchema):
     updated_at = fields.DateTime(required=True, dump_only=True)
     archived_at = fields.DateTime(
         required=False, dump_only=True, load_only=True)
+    archived = fields.Boolean(required=False, dump_only=True)
 
     @post_dump(pass_many=False)
     def remove_fiels_with_value_as_none(self, data, many, **kwargs):

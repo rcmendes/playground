@@ -11,7 +11,7 @@ from marshmallow import ValidationError
 from db import db
 from ma import ma
 from resources.user import User
-from resources.login import Login
+from resources.login import Login, RefreshToken
 from resources.task import Task
 from resources.agenda import Agenda
 from resources.task import Task
@@ -42,7 +42,7 @@ api.add_resource(User, "/users", "/users/<string:user_id>")
 api.add_resource(Login, "/login")
 api.add_resource(Task, "/tasks", "/tasks/<string:task_id>")
 api.add_resource(Agenda, "/agendas", "/agendas/<string:agenda_id>")
-# api.add_resource(Task, "/tasks", "/tasks/<str:task_id")
+api.add_resource(RefreshToken, "/refresh")
 
 if "__main__" == __name__:
     db.init_app(app)
