@@ -7,7 +7,6 @@ from models.base import BaseModel
 class AgendaModel(BaseModel):
     __tablename__ = "agendas"
 
-    id = db.Column(db.String(36), primary_key=True)
     title = db.Column(db.String(100), nullable=False, unique=True)
     description = db.Column(db.String(2048), nullable=True)
 

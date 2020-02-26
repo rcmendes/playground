@@ -8,7 +8,6 @@ from models.agenda import AgendaModel
 class TaskModel(BaseModel):
     __tablename__ = "tasks"
 
-    id = db.Column(db.String(36), primary_key=True)
     title = db.Column(db.String(100), nullable=False, index=True)
     description = db.Column(db.String(1024), nullable=True)
 
