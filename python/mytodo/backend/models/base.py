@@ -23,6 +23,14 @@ class BaseModel(db.Model):
         db.session.delete(self)
         db.session.commit()
 
+    def archive(self) -> None:
+        timestamp = datetime.utcnow()
+        self.updated_at = timestamp
+        self.archived_at = timestamp
+
+        db.session.add(self)
+        db.session.commit()
+
     def save(self) -> None:
         if not self.updated_at:
             self.updated_at = self.created_at
@@ -31,3 +39,5 @@ class BaseModel(db.Model):
 
         db.session.add(self)
         db.session.commit()
+
+    def query(self):

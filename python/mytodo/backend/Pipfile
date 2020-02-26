@@ -17,6 +17,7 @@ marshmallow = "*"
 marshmallow-sqlalchemy = "*"
 python-dotenv = "*"
 bcrypt = "*"
+logzero = "*"
 
 [requires]
 python_version = "3.8"
