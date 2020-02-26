@@ -40,4 +40,6 @@ class BaseModel(db.Model):
         db.session.add(self)
         db.session.commit()
 
+    @property
     def query(self):
+        return self.__class__.query.filter_by(archived_at != None)
