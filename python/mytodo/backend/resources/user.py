@@ -1,6 +1,7 @@
 import os
 
 from flask_restful import Resource, request
+from flask_jwt_extended import jwt_required, fresh_jwt_required
 from marshmallow import ValidationError
 import bcrypt
 
@@ -10,6 +11,7 @@ from models.user import UserModel
 
 class User(Resource):
     @classmethod
+    @jwt_required
     def get(cls, user_id: str = None):
         if not user_id:
             return user_list_schema.dump(UserModel.fetch_all()), 200
@@ -36,6 +38,7 @@ class User(Resource):
         return user_schema.dump(user), 201
 
     @classmethod
+    @fresh_jwt_required
     def patch(cls, user_id: str):
         user_json = request.get_json()
         user_data = user_schema.load(user_json)
@@ -59,6 +62,7 @@ class User(Resource):
         return user_schema.dump(user), 204
 
     @classmethod
+    @fresh_jwt_required
     def put(cls, user_id: str):
         user_json = request.get_json()
         updated_user = user_schema.load(user_json)
