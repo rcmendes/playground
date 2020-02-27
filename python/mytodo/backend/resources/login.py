@@ -34,7 +34,7 @@ class Login(Resource):
 class RefreshToken(Resource):
     @classmethod
     @jwt_refresh_token_required
-    def refresh(cls):
+    def post(cls):
         current_user = get_jwt_identity()
         new_token = create_access_token(identity=current_user, fresh=False)
         response = {'access_token': new_token}
