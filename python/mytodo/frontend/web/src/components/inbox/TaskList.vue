@@ -1,6 +1,6 @@
 <template>
 	<v-card max-width="500" class="mx-auto">
-		<v-toolbar color="pink" dark>
+		<v-toolbar color="primary" dark>
 			<v-app-bar-nav-icon></v-app-bar-nav-icon>
 
 			<v-toolbar-title>Inbox</v-toolbar-title>
@@ -16,91 +16,185 @@
 			</v-btn>
 		</v-toolbar>
 
-		<v-list two-line>
-			<v-list-item-group
-				v-model="selected"
-				multiple
-				active-class="pink--text"
-			>
-				<template v-for="(item, index) in items">
-					<v-list-item :key="item.title">
-						<template v-slot:default="{ active }">
-							<v-list-item-content>
-								<v-list-item-title
-									v-text="item.title"
-								></v-list-item-title>
-								<v-list-item-subtitle
-									class="text--primary"
-									v-text="item.headline"
-								></v-list-item-subtitle>
-								<v-list-item-subtitle
-									v-text="item.subtitle"
-								></v-list-item-subtitle>
-							</v-list-item-content>
+		<template v-for="(item, index) in items">
+			<v-list-item two-line :key="item.title">
+				<v-list-item-content>
+					<v-list-item-title v-if="inEditMode(index)">
+						<v-form>
+							<v-container>
+								<v-row>
+									<v-col cols="12" sm="6" md="3">
+										<v-text-field
+											label="Title"
+											v-model="editedItem.title"
+										></v-text-field>
+									</v-col>
 
-							<v-list-item-action>
-								<v-list-item-action-text
-									v-text="item.action"
-								></v-list-item-action-text>
-								<v-icon v-if="!active" color="grey lighten-1"
-									>mdi-information</v-icon
+									<v-col cols="12" sm="6" md="3">
+										<date-picker-modal
+											:onSetDate="onUpdateDueDate"
+										/>
+									</v-col>
+								</v-row>
+							</v-container>
+						</v-form>
+					</v-list-item-title>
+					<v-list-item-title
+						v-else
+						v-text="item.title"
+					></v-list-item-title>
+					<v-list-item-subtitle>
+						<v-chip-group column>
+							<template v-for="(tag, idxTag) in item.tags">
+								<v-chip
+									:key="idxTag"
+									small
+									class="ma-2"
+									color="green"
+									text-color="white"
+									v-if="chip1"
+									close
+									@click:close="chip1 = false"
+									>{{ tag }}</v-chip
 								>
-								<v-icon v-else color="blue"
-									>mdi-information</v-icon
-								>
-							</v-list-item-action>
-						</template>
-					</v-list-item>
-
-					<v-divider
-						v-if="index + 1 < items.length"
-						:key="index"
-					></v-divider>
-				</template>
-			</v-list-item-group>
-		</v-list>
+							</template>
+						</v-chip-group>
+						<v-text-field
+							v-if="inAddTagMode(index)"
+							label="New tag"
+							v-model="editedItem.title"
+						></v-text-field>
+					</v-list-item-subtitle>
+				</v-list-item-content>
+				<v-list-item-action>
+					<v-list-item-action-text
+						v-text="item.dueDate"
+						v-if="!inEditMode(index)"
+					></v-list-item-action-text>
+					<v-btn-toggle v-if="inEditMode(index)">
+						<v-btn icon small @click="save()">
+							<v-icon color="blue">mdi-content-save-edit</v-icon>
+						</v-btn>
+						<v-btn icon small @click="cancel()">
+							<v-icon color="red">mdi-cancel</v-icon>
+						</v-btn>
+					</v-btn-toggle>
+					<v-btn-toggle
+						v-else-if="!inEditMode(index) && !inAddTagMode(index)"
+					>
+						<v-btn icon small @click="addNewTag(index)">
+							<v-icon color="green">mdi-tag-plus</v-icon>
+						</v-btn>
+						<v-btn icon small @click="edit(index)">
+							<v-icon color="grey lighten-1">mdi-pencil</v-icon>
+						</v-btn>
+					</v-btn-toggle>
+					<v-btn-toggle v-else-if="inAddTagMode(index)">
+						<v-btn icon small @click="saveNewTag()">
+							<v-icon color="blue">mdi-content-save-edit</v-icon>
+						</v-btn>
+						<v-btn icon small @click="cancel()">
+							<v-icon color="red">mdi-cancel</v-icon>
+						</v-btn>
+					</v-btn-toggle>
+				</v-list-item-action>
+			</v-list-item>
+		</template>
 	</v-card>
 </template>
 <script>
+import DatePickerModal from "@/components/common/DatePickerModal";
+
 export default {
+	components: { DatePickerModal },
 	data: () => ({
-		selected: [2],
+		addingTag: false,
+		editing: false,
+		chip1: true,
+		selected: undefined,
+		editedItem: {
+			title: undefined
+		},
 		items: [
 			{
-				action: "15 min",
+				dueDate: new Date().toISOString().substr(0, 10),
 				headline: "Brunch this weekend?",
 				title: "Ali Connors",
 				subtitle:
-					"I'll be in your neighborhood doing errands this weekend. Do you want to hang out?"
+					"I'll be in your neighborhood doing errands this weekend. Do you want to hang out?",
+				tags: ["Tag 1", "Tag 2", "Tag 3"]
 			},
 			{
-				action: "2 hr",
+				dueDate: new Date().toISOString().substr(0, 10),
 				headline: "Summer BBQ",
 				title: "me, Scrott, Jennifer",
-				subtitle: "Wish I could come, but I'm out of town this weekend."
+				subtitle:
+					"Wish I could come, but I'm out of town this weekend.",
+				tags: ["Tag A", "Tag B"]
 			},
 			{
-				action: "6 hr",
+				dueDate: new Date().toISOString(),
 				headline: "Oui oui",
 				title: "Sandra Adams",
 				subtitle:
-					"Do you have Paris recommendations? Have you ever been?"
+					"Do you have Paris recommendations? Have you ever been?",
+				tags: ["Tag X", "Tag Y"]
 			},
 			{
-				action: "12 hr",
+				dueDate: new Date().toISOString().substr(0, 10),
 				headline: "Birthday gift",
 				title: "Trevor Hansen",
 				subtitle:
 					"Have any ideas about what we should get Heidi for her birthday?"
 			},
 			{
-				action: "18hr",
+				dueDate: new Date().toISOString().substr(0, 10),
 				headline: "Recipe to try",
 				title: "Britta Holt",
 				subtitle:
 					"We should eat this: Grate, Squash, Corn, and tomatillo Tacos."
 			}
 		]
-	})
+	}),
+	methods: {
+		save: function() {
+			console.log("saving!");
+			this.items[this.selected].title = this.editedItem.title;
+			this.items[this.selected].dueDate = this.editedItem.dueDate;
+			this.clear();
+		},
+		cancel: function() {
+			console.log("canceling!");
+			this.clear();
+		},
+		edit: function(index) {
+			console.log("editing");
+			this.selected = index;
+			this.editing = true;
+			this.editedItem = this.items[index];
+		},
+		addNewTag: function(index) {
+			console.log("adding new tag");
+			this.selected = index;
+			this.editedItem = this.items[index];
+			this.addingTag = true;
+		},
+		inEditMode: function(index) {
+			return this.editing && this.selected === index;
+		},
+		inAddTagMode: function(index) {
+			return this.addingTag && this.selected === index;
+		},
+		onUpdateDueDate: function(date) {
+			console.log(date);
+			this.editedItem.dueDate = date;
+		},
+		clear: function() {
+			this.selected = undefined;
+			this.editing = false;
+			this.addingTag = false;
+			this.editedItem = {};
+		}
+	}
 };
 </script>
