@@ -1,1 +1,0 @@
-/Users/rodrigo/git-projects/github.com/playground/rust/lifetimes/target/debug/lifetimes-65bd865f4d846114: /Users/rodrigo/git-projects/github.com/playground/rust/lifetimes/src/examples.rs /Users/rodrigo/git-projects/github.com/playground/rust/lifetimes/src/lib.rs
