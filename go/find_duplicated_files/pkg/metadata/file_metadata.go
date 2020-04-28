@@ -11,12 +11,17 @@ import (
 type FileMetadata struct {
 	path string
 	size uint64
-	hash string
+	hash *string
 }
 
 func (meta *FileMetadata) String() string {
 	size := meta.size / 1024
-	return fmt.Sprintf("%s | %d kb | {%s}", meta.path, size, meta.hash)
+
+	if meta.hash == nil {
+		return fmt.Sprintf("%s | %d kb", meta.path, size)
+	}
+
+	return fmt.Sprintf("%s | %d kb | {%v}", meta.path, size, meta.hash)
 }
 
 //Path defines the path of the file.
@@ -30,25 +35,27 @@ func (meta *FileMetadata) Size() uint64 {
 }
 
 //Hash defines the hash of the file data.
-func (meta *FileMetadata) Hash() string {
-	return meta.hash
+func (meta *FileMetadata) Hash() (string, error) {
+	if meta.hash == nil {
+		hash, err := helpers.CalculateFileHash(meta.path)
+		if err != nil {
+			return "", err
+		}
+		meta.hash = &hash
+	}
+	return *meta.hash, nil
 }
 
 //NewFileMetadataFromFile create a FileMetadata of the file.
-func NewFileMetadataFromFile(filePath string) (*FileMetadata, error) {
-	fileInfo, err := os.Stat(filePath)
+func NewFileMetadataFromFile(path string) (*FileMetadata, error) {
+	fileInfo, err := os.Stat(path)
 	if err != nil {
 		return nil, err
 	}
 
-	if fileInfo.IsDir() {
-		return nil, fmt.Errorf("%s is a diretory", filePath)
+	if !fileInfo.Mode().IsRegular() {
+		return nil, fmt.Errorf("%s is not a file", path)
 	}
 
-	hash, err := helpers.CalculateFileHash(filePath)
-	if err != nil {
-		return nil, err
-	}
-
-	return &FileMetadata{path: filePath, size: uint64(fileInfo.Size()), hash: hash}, nil
+	return &FileMetadata{path: path, size: uint64(fileInfo.Size()), hash: nil}, nil
 }
