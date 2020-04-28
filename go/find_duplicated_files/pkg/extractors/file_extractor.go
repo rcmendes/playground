@@ -59,11 +59,11 @@ func groupFilesBySizeFromDir(rootDir string) (*ConcurrentFileMetadataMap, error)
 
 	var wg sync.WaitGroup
 
-	fileChannel := make(chan *FileMetadata)
+	fileChannel := make(chan FileMetadata)
 
 	go func() {
 		for file := range fileChannel {
-			err := filesBySize.Append(file.Size(), *file)
+			err := filesBySize.Append(file.Size(), file)
 			if err != nil {
 				log.Fatal(err)
 			}
@@ -73,19 +73,18 @@ func groupFilesBySizeFromDir(rootDir string) (*ConcurrentFileMetadataMap, error)
 	err := filepath.Walk(rootDir, func(path string, info os.FileInfo, err error) error {
 		fileInfo, err := os.Stat(path)
 		if err != nil {
-			return err
-		}
-
-		if !fileInfo.IsDir() {
+			log.Printf("%s could not be handled. Error: %s", path, err.Error())
+		} else if !fileInfo.IsDir() {
 			wg.Add(1)
-			go func(fileChannel chan<- *FileMetadata) {
+			go func(fileChannel chan<- FileMetadata) {
 				defer wg.Done()
 				file, err := NewFileMetadataFromFile(path)
 				if err != nil {
 					log.Println(err)
+				} else {
+					fileChannel <- *file
 				}
 
-				fileChannel <- file
 			}(fileChannel)
 		}
 
@@ -104,6 +103,7 @@ func DuplicatedFilesFromDir(path string) (map[string]*ConcurrentFileMetaDataList
 
 	filesBySize, err := groupFilesBySizeFromDir(path)
 	if err != nil {
+		log.Println("< 6 >")
 		return nil, err
 	}
 
@@ -116,6 +116,7 @@ func DuplicatedFilesFromDir(path string) (map[string]*ConcurrentFileMetaDataList
 				for _, file := range files.All() {
 					hash, err := file.Hash()
 					if err != nil {
+						log.Println("< 7 >")
 						return nil, err
 					}
 					list, ok := duplicatedFileMap[hash]
