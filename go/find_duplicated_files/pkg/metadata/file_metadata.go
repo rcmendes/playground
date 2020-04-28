@@ -15,13 +15,13 @@ type FileMetadata struct {
 }
 
 func (meta *FileMetadata) String() string {
-	size := meta.size / 1024
+	size := meta.size
 
 	if meta.hash == nil {
-		return fmt.Sprintf("%s | %d kb", meta.path, size)
+		return fmt.Sprintf("%s | %d b", meta.path, size)
 	}
 
-	return fmt.Sprintf("%s | %d kb | {%s}", meta.path, size, *meta.hash)
+	return fmt.Sprintf("%s | %d b | {%s}", meta.path, size, *meta.hash)
 }
 
 //Path defines the path of the file.

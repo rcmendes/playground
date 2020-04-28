@@ -74,7 +74,7 @@ func groupFilesBySizeFromDir(rootDir string) (*ConcurrentFileMetadataMap, error)
 		fileInfo, err := os.Stat(path)
 		if err != nil {
 			log.Printf("%s could not be handled. Error: %s", path, err.Error())
-		} else if !fileInfo.IsDir() {
+		} else if !fileInfo.IsDir() && fileInfo.Size() > 0 {
 			wg.Add(1)
 			go func(fileChannel chan<- FileMetadata) {
 				defer wg.Done()
@@ -111,7 +111,8 @@ func DuplicatedFilesFromDir(path string) (map[string]*ConcurrentFileMetaDataList
 	for _, key := range keySet {
 		files, ok := filesBySize.GetMetadataListByKey(key)
 
-		if files.Length() > 1 {
+		length := files.Length()
+		if length > 1 {
 			if ok {
 				for _, file := range files.All() {
 					hash, err := file.Hash()
@@ -129,6 +130,12 @@ func DuplicatedFilesFromDir(path string) (map[string]*ConcurrentFileMetaDataList
 
 				}
 			}
+		}
+	}
+
+	for hash, files := range duplicatedFileMap {
+		if files.Length() < 2 {
+			delete(duplicatedFileMap, hash)
 		}
 	}
 

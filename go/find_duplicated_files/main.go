@@ -13,6 +13,8 @@ func main() {
 	var rootDir string
 	flag.StringVar(&rootDir, "d", ".", "the root dir. e.g: -d=/home/files")
 
+	// rootDir := "/Users/rodrigo/RcMendes80GoogleDrive/e-books"
+
 	flag.Parse()
 
 	info, err := os.Stat(rootDir)
