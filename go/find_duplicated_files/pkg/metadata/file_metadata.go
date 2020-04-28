@@ -21,7 +21,7 @@ func (meta *FileMetadata) String() string {
 		return fmt.Sprintf("%s | %d kb", meta.path, size)
 	}
 
-	return fmt.Sprintf("%s | %d kb | {%v}", meta.path, size, meta.hash)
+	return fmt.Sprintf("%s | %d kb | {%s}", meta.path, size, *meta.hash)
 }
 
 //Path defines the path of the file.
