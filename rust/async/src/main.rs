@@ -1,5 +1,4 @@
 use futures::future::{BoxFuture, FutureExt};
-use std::future::Future;
 use std::path::Path;
 use tokio::fs;
 use tokio::prelude::*;
